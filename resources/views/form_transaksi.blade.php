@@ -74,6 +74,7 @@
                 <input type="hidden" id="barang_data" name="barang_data" value="">
             </div>
             <button type="submit" class="bg-purple-600 text-white p-2 rounded w-full">Simpan Transaksi</button>
+            <a href="/" class="bg-gray-400 text-white p-2 rounded w-full my-3 text-center block">Kembali</a>
         </form>
     </div>
     <script>

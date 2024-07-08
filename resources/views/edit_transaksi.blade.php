@@ -64,6 +64,7 @@
                 <input type="hidden" id="total_transaksi" name="total_transaksi" value="{{ $transaksi->total_transaksi }}">
             </div>
             <button type="submit" class="bg-purple-600 text-white p-2 rounded w-full">Simpan Perubahan</button>
+            <a href="/" class="bg-gray-400 text-white p-2 rounded w-full my-3 text-center block">Batal Perubahan</a>
         </form>
     </div>
     <script>
