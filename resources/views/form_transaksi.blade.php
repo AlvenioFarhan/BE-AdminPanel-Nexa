@@ -42,13 +42,13 @@
             <div class="mb-4">
                 <label for="barang" class="block font-semibold">Pilih Barang</label>
                 <div class="flex space-x-4">
-                    <select id="barang" name="barang[][kd_barang]" class="border border-gray-300 p-2 rounded w-full">
+                    <select id="barang" class="border border-gray-300 p-2 rounded w-full">
                         @foreach($barang as $item)
                         <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
                         @endforeach
                     </select>
-                    <input type="number" id="qty" name="barang[][qty]" placeholder="Qty" class="border border-gray-300 p-2 rounded w-1/4">
-                    <input type="number" id="subtotal" name="barang[][subtotal]" placeholder="Subtotal" class="border border-gray-300 p-2 rounded w-1/4">
+                    <input type="number" id="qty" name="qty" placeholder="Qty" class="border border-gray-300 p-2 rounded w-1/4">
+                    <input type="number" id="subtotal" name="subtotal" placeholder="Subtotal" class="border border-gray-300 p-2 rounded w-1/4">
                     <button type="button" onclick="addBarang()" class="bg-purple-600 text-white p-2 rounded">Tambah Barang</button>
                 </div>
             </div>
@@ -71,6 +71,7 @@
             <div class="mb-4">
                 <p class="font-bold">Total Transaksi : Rp <span id="totalTransaksi">0</span></p>
                 <input type="hidden" id="total_transaksi" name="total_transaksi" value="0">
+                <input type="hidden" id="barang_data" name="barang_data" value="">
             </div>
             <button type="submit" class="bg-purple-600 text-white p-2 rounded w-full">Simpan Transaksi</button>
         </form>
@@ -108,6 +109,17 @@
                 cellSubtotal.innerHTML = subtotal;
                 cellAction.innerHTML = '<button type="button" onclick="deleteBarang(this)" class="text-red-600">Hapus</button>';
 
+                // Update hidden input with barang data
+                const barangDataInput = document.getElementById('barang_data');
+                const barangData = JSON.parse(barangDataInput.value || '[]');
+                barangData.push({
+                    kd_barang: barangSelect.value,
+                    nama_barang: barangSelect.options[barangSelect.selectedIndex].text,
+                    qty: qty,
+                    subtotal: subtotal
+                });
+                barangDataInput.value = JSON.stringify(barangData);
+
                 // Update total transaksi
                 const totalTransaksiElem = document.getElementById('totalTransaksi');
                 const totalTransaksiInput = document.getElementById('total_transaksi');
@@ -127,6 +139,12 @@
             const row = btn.parentNode.parentNode;
             const subtotal = parseInt(row.cells[3].innerHTML);
             row.parentNode.removeChild(row);
+
+            // Update hidden input with barang data
+            const barangDataInput = document.getElementById('barang_data');
+            const barangData = JSON.parse(barangDataInput.value || '[]');
+            barangData.splice(row.rowIndex - 1, 1);  // Remove the deleted item from the array
+            barangDataInput.value = JSON.stringify(barangData);
 
             // Update total transaksi
             const totalTransaksiElem = document.getElementById('totalTransaksi');

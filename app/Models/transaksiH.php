@@ -1,5 +1,5 @@
 <?php
-// app/Models/TransaksiH.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

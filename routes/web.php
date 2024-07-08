@@ -1,6 +1,5 @@
 <?php
 
-// routes/web.php
 use App\Http\Controllers\TransaksiController;
 
 Route::get('/', [TransaksiController::class, 'index'])->name('transaksi.index');

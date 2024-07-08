@@ -1,4 +1,4 @@
-// resources/views/edit_transaksi.blade.php
+<!-- resources/views/edit_transaksi.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +10,7 @@
 <body class="bg-gray-100 p-4">
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-bold mb-6">EDIT TRANSAKSI</h1>
-        <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST">
+        <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST" id="editTransaksiForm">
             @csrf
             @method('PUT')
             <div class="mb-4">
@@ -40,27 +40,50 @@
                             <th class="py-2 px-4">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="barangTableBody">
                         @foreach($transaksi->detail as $item)
-                        <tr>
+                        <tr data-id="{{ $item->id }}">
                             <td class="border-t py-2 px-4">{{ $loop->iteration }}</td>
                             <td class="border-t py-2 px-4">{{ $item->nama_barang }}</td>
-                            <td class="border-t py-2 px-4">{{ $item->qty }}</td>
+                            <td class="border-t py-2 px-4"><input type="number" name="barang[{{ $item->id }}][qty]" value="{{ $item->qty }}" class="border border-gray-300 p-1 rounded w-full"></td>
                             <td class="border-t py-2 px-4">{{ number_format($item->subtotal, 2, ',', '.') }}</td>
                             <td class="border-t py-2 px-4">
-                                <button class="text-blue-600">Edit</button> |
-                                <button class="text-red-600">Hapus</button>
+                                <button type="button" class="text-red-600" onclick="deleteBarang(this)">Hapus</button>
                             </td>
+                            <input type="hidden" name="barang[{{ $item->id }}][id]" value="{{ $item->id }}">
+                            <input type="hidden" name="barang[{{ $item->id }}][kd_barang]" value="{{ $item->kd_barang }}">
+                            <input type="hidden" name="barang[{{ $item->id }}][nama_barang]" value="{{ $item->nama_barang }}">
+                            <input type="hidden" name="barang[{{ $item->id }}][subtotal]" value="{{ $item->subtotal }}">
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="mb-4">
-                <p class="font-bold">Total Transaksi : Rp {{ number_format($transaksi->total_transaksi, 2, ',', '.') }}</p>
+                <p class="font-bold">Total Transaksi : Rp <span id="totalTransaksi">{{ number_format($transaksi->total_transaksi, 2, ',', '.') }}</span></p>
+                <input type="hidden" id="total_transaksi" name="total_transaksi" value="{{ $transaksi->total_transaksi }}">
             </div>
             <button type="submit" class="bg-purple-600 text-white p-2 rounded w-full">Simpan Perubahan</button>
         </form>
     </div>
+    <script>
+        function deleteBarang(button) {
+            const row = button.closest('tr');
+            row.remove();
+            updateTotalTransaksi();
+        }
+
+        function updateTotalTransaksi() {
+            const rows = document.querySelectorAll('#barangTableBody tr');
+            let total = 0;
+            rows.forEach(row => {
+                const qty = row.querySelector('input[name*="[qty]"]').value;
+                const subtotal = parseFloat(row.querySelector('input[name*="[subtotal]"]').value);
+                total += qty * subtotal;
+            });
+            document.getElementById('totalTransaksi').innerText = total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+            document.getElementById('total_transaksi').value = total;
+        }
+    </script>
 </body>
 </html>
