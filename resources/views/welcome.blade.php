@@ -1,4 +1,3 @@
-<!-- resources/views/welcome.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +48,7 @@
                     <td class="border-t py-2 px-4">{{ number_format($trx->total_transaksi, 2, ',', '.') }}</td>
                     <td class="border-t py-2 px-4">
                         <a href="{{ route('transaksi.edit', $trx->id) }}" class="text-blue-600">Edit</a> |
-                        <form action="{{ route('transaksi.destroy', $trx->id) }}" method="POST" style="display:inline">
+                        <form action="{{ route('transaksi.destroy', $trx->id) }}" method="POST" style="display:inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="text-red-600">Hapus</button>

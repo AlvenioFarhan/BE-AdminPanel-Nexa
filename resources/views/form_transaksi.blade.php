@@ -1,4 +1,3 @@
-<!-- resources/views/form_transaksi.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,13 +41,13 @@
             <div class="mb-4">
                 <label for="barang" class="block font-semibold">Pilih Barang</label>
                 <div class="flex space-x-4">
-                    <select id="barang" class="border border-gray-300 p-2 rounded w-full">
+                    <select id="barang" class="border border-gray-300 p-2 rounded w-full" onchange="updateSubtotal()">
                         @foreach($barang as $item)
-                        <option value="{{ $item['id'] }}">{{ $item['nama'] }}</option>
+                        <option value="{{ $item['id'] }}" data-harga="15000">{{ $item['nama'] }}</option>
                         @endforeach
                     </select>
-                    <input type="number" id="qty" name="qty" placeholder="Qty" class="border border-gray-300 p-2 rounded w-1/4">
-                    <input type="number" id="subtotal" name="subtotal" placeholder="Subtotal" class="border border-gray-300 p-2 rounded w-1/4">
+                    <input type="number" id="qty" name="qty" placeholder="Qty" class="border border-gray-300 p-2 rounded w-1/4" oninput="updateSubtotal()">
+                    <input type="number" id="subtotal" name="subtotal" placeholder="Subtotal" class="border border-gray-300 p-2 rounded w-1/4" readonly>
                     <button type="button" onclick="addBarang()" class="bg-purple-600 text-white p-2 rounded">Tambah Barang</button>
                 </div>
             </div>
@@ -85,6 +84,19 @@
                 dataCustomer.classList.remove('hidden');
             } else {
                 dataCustomer.classList.add('hidden');
+            }
+        }
+
+        function updateSubtotal() {
+            const barangSelect = document.getElementById('barang');
+            const qty = document.getElementById('qty').value;
+            const harga = barangSelect.options[barangSelect.selectedIndex].getAttribute('data-harga');
+            const subtotal = document.getElementById('subtotal');
+
+            if (harga && qty) {
+                subtotal.value = harga * qty;
+            } else {
+                subtotal.value = 0;
             }
         }
 
